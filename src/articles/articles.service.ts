@@ -1,16 +1,29 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { MongoRepository } from 'typeorm'
+import { MongoRepository, ObjectID } from 'typeorm'
 
-import { Article } from './article.entity'
+import { ArticleDetails } from './classes/article-details.entity'
+import { ArticleListItem } from './classes/article-list-item.entity'
 
 @Injectable()
 export class ArticlesService {
   constructor(
-    @InjectRepository(Article)
-    private readonly articleRepository: MongoRepository<Article>,
+    @InjectRepository(ArticleDetails)
+    private readonly articleDetailsRepository: MongoRepository<ArticleDetails>,
+    @InjectRepository(ArticleListItem)
+    private readonly articleListItemRepository: MongoRepository<ArticleListItem>,
   ) {}
-  public async getArticles(): Promise<Article[]> {
-    return this.articleRepository.find({ take: 50 })
+  public async listArticles(): Promise<ArticleListItem[]> {
+    return this.articleListItemRepository.find({
+      take: 50,
+    })
+  }
+
+  public async getArticleDetails(articleId: string): Promise<ArticleDetails> {
+    const article = await this.articleDetailsRepository.findOne(articleId)
+    if (!article) {
+      throw new NotFoundException('No article found with this id', 'ArticleNotFoundError')
+    }
+    return article
   }
 }
