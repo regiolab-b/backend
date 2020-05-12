@@ -1,5 +1,5 @@
 import { Controller, Get, Param } from '@nestjs/common'
-import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ArticlesService } from './articles.service'
 import { ArticleDetails } from './classes/article-details.entity'
@@ -8,6 +8,7 @@ import { ArticleListItem } from './classes/article-list-item.entity'
 
 @Controller('articles')
 @ApiTags('Articles')
+@ApiBadRequestResponse({ description: 'Bad user input' })
 export class ArticlesController {
   constructor(private readonly articleService: ArticlesService) {}
 

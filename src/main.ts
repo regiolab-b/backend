@@ -1,3 +1,4 @@
+import { BadRequestException, ValidationError, ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
@@ -9,6 +10,16 @@ declare const module: any
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule)
   const config: ConfigService = app.get('ConfigService')
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      validationError: { target: false, value: false },
+      exceptionFactory: (errors: ValidationError[]): BadRequestException =>
+        new BadRequestException(errors, 'ValidationError'),
+    }),
+  )
 
   const swaggerOptions = new DocumentBuilder()
     .setTitle('Regiolab API')
