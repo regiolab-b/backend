@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, ObjectIdColumn } from 'typeorm'
+import { Column, Entity, Index, ObjectIdColumn } from 'typeorm'
 
 @Entity('articles')
 export class ArticleListItem {
@@ -36,6 +36,7 @@ export class ArticleListItem {
     description: 'Publishing date of the article',
     example: new Date('2020-01-27T08:45:47.000Z'),
   })
+  @Index()
   @Column()
   pubDate: Date
 

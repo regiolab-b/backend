@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { MongoRepository, ObjectID } from 'typeorm'
+import { ObjectIdArray } from 'src/common/fucntions/objectid-array.function'
+import { RecommendationsService } from 'src/recommendations/recommendations.service'
+import { MongoRepository } from 'typeorm'
 
 import { ArticleDetails } from './classes/article-details.entity'
 import { ArticleListItem } from './classes/article-list-item.entity'
@@ -12,11 +14,42 @@ export class ArticlesService {
     private readonly articleDetailsRepository: MongoRepository<ArticleDetails>,
     @InjectRepository(ArticleListItem)
     private readonly articleListItemRepository: MongoRepository<ArticleListItem>,
+    private readonly recommendationsService: RecommendationsService,
   ) {}
-  public async listArticles(): Promise<ArticleListItem[]> {
+  public async listArticles(amount = 50): Promise<ArticleListItem[]> {
     return this.articleListItemRepository.find({
-      take: 50,
+      take: amount,
+      order: {
+        pubDate: 'DESC',
+      },
     })
+  }
+
+  public async listRecommendedArticles(userId: string): Promise<ArticleListItem[]> {
+    const recommendedArticleIds = await this.recommendationsService.getRecommendationIds(userId)
+    const recommendedArticleObjectIds = ObjectIdArray(recommendedArticleIds)
+
+    let recommendedArticles = await this.articleListItemRepository.findByIds(recommendedArticleObjectIds)
+
+    if (recommendedArticles.length < 50) {
+      const idsNotToFind = recommendedArticleIds.concat(await this.recommendationsService.getLikedWatchedIds(userId))
+      const objectIdsNotToFind = ObjectIdArray(idsNotToFind)
+
+      const additionalArticles = await this.articleListItemRepository.find({
+        take: 50 - recommendedArticles.length,
+        order: {
+          pubDate: 'DESC',
+        },
+        where: {
+          _id: {
+            $nin: objectIdsNotToFind,
+          },
+        },
+      })
+
+      recommendedArticles = recommendedArticles.concat(additionalArticles)
+    }
+    return recommendedArticles
   }
 
   public async getArticleDetails(articleId: string): Promise<ArticleDetails> {

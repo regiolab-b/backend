@@ -2,9 +2,10 @@ import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { ArticlesModule } from './articles/articles.module'
+import { AuthModule } from './auth/auth.module'
 import { ConfigModule } from './config/config.module'
 import { ConfigService } from './config/config.service'
-import { AuthModule } from './auth/auth.module';
+import { RecommendationsModule } from './recommendations/recommendations.module'
 
 const entityContext = require.context('.', true, /\.entity\.ts$/)
 
@@ -32,6 +33,7 @@ const entityContext = require.context('.', true, /\.entity\.ts$/)
       }),
     }),
     AuthModule,
+    RecommendationsModule,
   ],
   controllers: [],
   providers: [],

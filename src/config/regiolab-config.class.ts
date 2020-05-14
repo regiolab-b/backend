@@ -29,6 +29,10 @@ export class RegiolabConfig {
 
   @IsNotEmpty()
   @IsString()
+  REDIS_URL: string
+
+  @IsNotEmpty()
+  @IsString()
   @NotContains('CHANGE-ME-PLEASE!', {
     message: 'Set TOKEN_SECRET to something safe and random!',
   })
