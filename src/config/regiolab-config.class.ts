@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer'
-import { IsNotEmpty, IsNumber, IsString, Matches } from 'class-validator'
+import { IsNotEmpty, IsNumber, IsString, Matches, NotContains } from 'class-validator'
 
 const jsonParse = (value: any): any => {
   try {
@@ -26,4 +26,11 @@ export class RegiolabConfig {
   @IsNotEmpty()
   @IsString()
   MONGODB_URL: string
+
+  @IsNotEmpty()
+  @IsString()
+  @NotContains('CHANGE-ME-PLEASE!', {
+    message: 'Set TOKEN_SECRET to something safe and random!',
+  })
+  TOKEN_SECRET: string
 }

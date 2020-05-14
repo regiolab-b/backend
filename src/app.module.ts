@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { ArticlesModule } from './articles/articles.module'
 import { ConfigModule } from './config/config.module'
 import { ConfigService } from './config/config.service'
+import { AuthModule } from './auth/auth.module';
 
 const entityContext = require.context('.', true, /\.entity\.ts$/)
 
@@ -30,6 +31,7 @@ const entityContext = require.context('.', true, /\.entity\.ts$/)
         appname: 'regiolab',
       }),
     }),
+    AuthModule,
   ],
   controllers: [],
   providers: [],

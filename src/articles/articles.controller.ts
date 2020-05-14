@@ -1,5 +1,13 @@
-import { Controller, Get, Param } from '@nestjs/common'
-import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { Controller, Get, Param, UseGuards } from '@nestjs/common'
+import { AuthGuard } from '@nestjs/passport'
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger'
 
 import { ArticlesService } from './articles.service'
 import { ArticleDetails } from './classes/article-details.entity'
@@ -8,6 +16,8 @@ import { ArticleListItem } from './classes/article-list-item.entity'
 
 @Controller('articles')
 @ApiTags('Articles')
+@UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth()
 @ApiBadRequestResponse({ description: 'Bad user input' })
 export class ArticlesController {
   constructor(private readonly articleService: ArticlesService) {}

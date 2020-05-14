@@ -25,6 +25,8 @@ async function bootstrap(): Promise<void> {
     .setTitle('Regiolab API')
     .setDescription("Look mom! I'm learning your reading preferences!")
     .setVersion('1.0')
+    .addBearerAuth()
+    .addTag('Access Token')
     .addTag('Articles')
     .build()
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerOptions)
