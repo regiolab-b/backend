@@ -60,6 +60,7 @@ export class ArticlesController {
     @Param() articleIdParams: ArticleIdParams,
     @ReqJwtPayload() jwtPayload: JwtPayload,
   ): Promise<void> {
+    await this.articleService.getArticleDetails(articleIdParams.id)
     return this.recommendationsService.like(jwtPayload.sub, articleIdParams.id)
   }
 
@@ -73,6 +74,7 @@ export class ArticlesController {
     @Param() articleIdParams: ArticleIdParams,
     @ReqJwtPayload() jwtPayload: JwtPayload,
   ): Promise<void> {
+    await this.articleService.getArticleDetails(articleIdParams.id)
     return this.recommendationsService.dislike(jwtPayload.sub, articleIdParams.id)
   }
 }

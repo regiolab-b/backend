@@ -23,6 +23,14 @@ export class RecommendationsService implements OnModuleInit {
     return this.raccoon.disliked(userId, articleId)
   }
 
+  public async unlike(userId: string, articleId: string): Promise<void> {
+    return this.raccoon.unliked(userId, articleId)
+  }
+
+  public async undislike(userId: string, articleId: string): Promise<void> {
+    return this.raccoon.undisliked(userId, articleId)
+  }
+
   public async getRecommendationIds(userId: string): Promise<string[]> {
     return this.raccoon.recommendFor(userId, 50)
   }
