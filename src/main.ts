@@ -11,6 +11,8 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule)
   const config: ConfigService = app.get('ConfigService')
 
+  app.setGlobalPrefix(config.BASE_URL)
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
