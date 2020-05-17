@@ -12,6 +12,7 @@ async function bootstrap(): Promise<void> {
   const config: ConfigService = app.get('ConfigService')
 
   app.setGlobalPrefix(config.BASE_URL)
+  app.enableCors()
 
   app.useGlobalPipes(
     new ValidationPipe({
