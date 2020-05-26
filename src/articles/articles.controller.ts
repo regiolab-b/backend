@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
+import { Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import {
   ApiBadRequestResponse,
@@ -16,6 +16,7 @@ import { ArticlesService } from './articles.service'
 import { ArticleDetails } from './classes/article-details.entity'
 import { ArticleIdParams } from './classes/article-id.params'
 import { ArticleListItem } from './classes/article-list-item.entity'
+import { ArticleListQueryParams } from './classes/article-list-query.params'
 
 @Controller('articles')
 @ApiTags('Articles')
@@ -29,8 +30,8 @@ export class ArticlesController {
   @Get()
   @ApiOperation({ operationId: 'getArticles', summary: 'Get list of articles' })
   @ApiOkResponse({ description: 'List of articles', type: ArticleListItem, isArray: true })
-  public async getArticles(): Promise<ArticleListItem[]> {
-    return this.articleService.listArticles()
+  public async getArticles(@Query() articleListQueryParams: ArticleListQueryParams): Promise<ArticleListItem[]> {
+    return this.articleService.listArticles(articleListQueryParams.limit)
   }
 
   @Get('recommended')

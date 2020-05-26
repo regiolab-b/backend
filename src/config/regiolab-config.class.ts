@@ -1,13 +1,6 @@
 import { Transform } from 'class-transformer'
 import { IsNotEmpty, IsNumber, IsString, Matches, NotContains } from 'class-validator'
-
-const jsonParse = (value: any): any => {
-  try {
-    return JSON.parse(value)
-  } catch (error) {
-    return value
-  }
-}
+import { jsonParseTransformer } from 'src/common/transformers/json-parse.transformer'
 
 export class RegiolabConfig {
   @IsNotEmpty()
@@ -15,7 +8,7 @@ export class RegiolabConfig {
   @Matches(new RegExp('^(development|production|test|provision)$'))
   NODE_ENV: 'development' | 'production' | 'test' | 'provision' = 'development'
 
-  @Transform(jsonParse, { toClassOnly: true })
+  @Transform(jsonParseTransformer, { toClassOnly: true })
   @IsNumber()
   PORT = 3000
 
