@@ -25,18 +25,18 @@ export class ArticlesService {
     })
   }
 
-  public async listRecommendedArticles(userId: string): Promise<ArticleListItem[]> {
+  public async listRecommendedArticles(userId: string, amount = 50): Promise<ArticleListItem[]> {
     const recommendedArticleIds = await this.recommendationsService.getRecommendationIds(userId)
     const recommendedArticleObjectIds = ObjectIdArray(recommendedArticleIds)
 
     let recommendedArticles = await this.articleListItemRepository.findByIds(recommendedArticleObjectIds)
 
-    if (recommendedArticles.length < 50) {
+    if (recommendedArticles.length < amount) {
       const idsNotToFind = recommendedArticleIds.concat(await this.recommendationsService.getLikedWatchedIds(userId))
       const objectIdsNotToFind = ObjectIdArray(idsNotToFind)
 
       const additionalArticles = await this.articleListItemRepository.find({
-        take: 50 - recommendedArticles.length,
+        take: amount - recommendedArticles.length,
         order: {
           pubDate: 'DESC',
         },

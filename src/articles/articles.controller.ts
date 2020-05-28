@@ -39,8 +39,11 @@ export class ArticlesController {
   @ApiBearerAuth()
   @ApiOperation({ operationId: 'getRecommendedArticles', summary: 'Get list of recommended articles' })
   @ApiOkResponse({ description: 'List of articles', type: ArticleListItem, isArray: true })
-  public async getRecommendedArticles(@ReqJwtPayload() jwtPayload: JwtPayload): Promise<ArticleListItem[]> {
-    return this.articleService.listRecommendedArticles(jwtPayload.sub)
+  public async getRecommendedArticles(
+    @Query() articleListQueryParams: ArticleListQueryParams,
+    @ReqJwtPayload() jwtPayload: JwtPayload,
+  ): Promise<ArticleListItem[]> {
+    return this.articleService.listRecommendedArticles(jwtPayload.sub, articleListQueryParams.limit)
   }
 
   @Get(':id')
