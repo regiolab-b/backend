@@ -5,7 +5,7 @@ import { Column, Entity, Index, ObjectIdColumn } from 'typeorm'
 export class ArticleListItem {
   @ObjectIdColumn()
   @ApiProperty({
-    description: 'Unique id for this user',
+    description: 'Unique id for this article',
     example: '5d49e11f600a423ffc0b1297',
   })
   _id: string

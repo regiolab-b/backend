@@ -3,6 +3,7 @@ import { AuthGuard } from '@nestjs/passport'
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -58,7 +59,7 @@ export class ArticlesController {
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @ApiOperation({ operationId: 'likeArticle', summary: 'Like an article' })
-  @ApiOkResponse({ description: 'Successfully liked Article' })
+  @ApiCreatedResponse({ description: 'Successfully liked Article' })
   @ApiNotFoundResponse({ description: 'No article found with this id' })
   public async likeArticle(
     @Param() articleIdParams: ArticleIdParams,
@@ -72,7 +73,7 @@ export class ArticlesController {
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @ApiOperation({ operationId: 'dislikeArticle', summary: 'Dislike an article' })
-  @ApiOkResponse({ description: 'Successfully disliked Article' })
+  @ApiCreatedResponse({ description: 'Successfully disliked Article' })
   @ApiNotFoundResponse({ description: 'No article found with this id' })
   public async dislikeArticle(
     @Param() articleIdParams: ArticleIdParams,

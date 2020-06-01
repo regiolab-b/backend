@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { ObjectIdArray } from 'src/common/fucntions/objectid-array.function'
+import { ObjectIdArray } from 'src/common/functions/objectid-array.function'
 import { RecommendationsService } from 'src/recommendations/recommendations.service'
 import { MongoRepository } from 'typeorm'
 
