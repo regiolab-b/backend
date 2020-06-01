@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { ObjectId } from 'mongodb'
 import { ObjectIdArray } from 'src/common/functions/objectid-array.function'
 import { RecommendationsService } from 'src/recommendations/recommendations.service'
 import { MongoRepository } from 'typeorm'
@@ -25,14 +26,18 @@ export class ArticlesService {
     })
   }
 
+  public async listIds(ids: ObjectId[]): Promise<ArticleListItem[]> {
+    return this.articleListItemRepository.findByIds(ids)
+  }
+
   public async listRecommendedArticles(userId: string, amount = 50): Promise<ArticleListItem[]> {
-    const recommendedArticleIds = await this.recommendationsService.getRecommendationIds(userId)
+    const recommendedArticleIds = await this.recommendationsService.getRecommendationIds(userId, amount)
     const recommendedArticleObjectIds = ObjectIdArray(recommendedArticleIds)
 
-    let recommendedArticles = await this.articleListItemRepository.findByIds(recommendedArticleObjectIds)
+    let recommendedArticles = await this.listIds(recommendedArticleObjectIds)
 
     if (recommendedArticles.length < amount) {
-      const idsNotToFind = recommendedArticleIds.concat(await this.recommendationsService.getLikedWatchedIds(userId))
+      const idsNotToFind = recommendedArticleIds.concat(await this.recommendationsService.getAllHistoryIds(userId))
       const objectIdsNotToFind = ObjectIdArray(idsNotToFind)
 
       const additionalArticles = await this.articleListItemRepository.find({

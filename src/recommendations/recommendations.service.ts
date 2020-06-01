@@ -23,19 +23,24 @@ export class RecommendationsService implements OnModuleInit {
     return this.raccoon.disliked(userId, articleId)
   }
 
-  public async unlike(userId: string, articleId: string): Promise<void> {
-    return this.raccoon.unliked(userId, articleId)
+  public async getRecommendationIds(userId: string, amount = 50): Promise<string[]> {
+    return this.raccoon.recommendFor(userId, amount)
   }
 
-  public async undislike(userId: string, articleId: string): Promise<void> {
-    return this.raccoon.undisliked(userId, articleId)
+  public async getLikeHistoryIds(userId: string): Promise<string[]> {
+    return this.raccoon.allLikedFor(userId)
   }
 
-  public async getRecommendationIds(userId: string): Promise<string[]> {
-    return this.raccoon.recommendFor(userId, 50)
+  public async getDislikeHistoryIds(userId: string): Promise<string[]> {
+    return this.raccoon.allDislikedFor(userId)
   }
 
-  public async getLikedWatchedIds(userId: string): Promise<string[]> {
+  public async getAllHistoryIds(userId: string): Promise<string[]> {
     return this.raccoon.allWatchedFor(userId)
+  }
+
+  public async deleteHistoryItem(userId: string, articleId: string): Promise<void> {
+    await this.raccoon.unliked(userId, articleId)
+    await this.raccoon.undisliked(userId, articleId)
   }
 }

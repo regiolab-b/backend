@@ -15,5 +15,6 @@ import { ArticleListItem } from './classes/article-list-item.entity'
     TypeOrmModule.forFeature([ArticleListItem]),
     RecommendationsModule,
   ],
+  exports: [ArticlesService],
 })
 export class ArticlesModule {}
