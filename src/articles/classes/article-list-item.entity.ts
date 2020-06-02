@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, Index, ObjectIdColumn } from 'typeorm'
+import { AfterLoad, Column, Entity, Index, ObjectIdColumn } from 'typeorm'
 
 @Entity('articles')
 export class ArticleListItem {
@@ -46,4 +46,14 @@ export class ArticleListItem {
   })
   @Column()
   breakingNews: boolean
+
+  @AfterLoad()
+  public stripEmptyLead(): void {
+    if (this.lead === '.') {
+      this.lead = ''
+    }
+    if (this.ankeiler === '.') {
+      this.ankeiler = ''
+    }
+  }
 }

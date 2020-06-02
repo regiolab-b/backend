@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity } from 'typeorm'
+import { AfterLoad, Column, Entity } from 'typeorm'
 
 import { ArticleListItem } from './article-list-item.entity'
 
@@ -12,4 +12,12 @@ export class ArticleDetails extends ArticleListItem {
   })
   @Column()
   body: string
+
+  @AfterLoad()
+  public stripLinks(): void {
+    this.body = this.body.replace(/<div style.*><div><strong>&#128172; WhatsApp ons!.*<\/strong>!<\/div><\/div>/, '')
+    this.body = this.body.replace(/href=".*"/, '')
+    this.body = this.body.replace(/\[StoryTelling.*]/, '')
+    this.body = this.body.replace(/<p><strong>Zie ook:.*<\/strong>.*<\/p>/, '')
+  }
 }
