@@ -42,5 +42,6 @@ export class RecommendationsService implements OnModuleInit {
   public async deleteHistoryItem(userId: string, articleId: string): Promise<void> {
     await this.raccoon.unliked(userId, articleId)
     await this.raccoon.undisliked(userId, articleId)
+    await this.raccoon.updateRecommendationsFor(userId)
   }
 }
