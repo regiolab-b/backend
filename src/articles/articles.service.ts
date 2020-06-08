@@ -31,6 +31,8 @@ export class ArticlesService {
   }
 
   public async listRecommendedArticles(userId: string, amount = 50): Promise<ArticleListItem[]> {
+    amount-- // Take one less out of database so we can insert a random article later
+
     const recommendedArticleIds = await this.recommendationsService.getRecommendationIds(userId, amount)
     const recommendedArticleObjectIds = ObjectIdArray(recommendedArticleIds)
 
@@ -54,7 +56,35 @@ export class ArticlesService {
 
       recommendedArticles = recommendedArticles.concat(additionalArticles)
     }
+
+    const currentArticleIds = recommendedArticles.map(article => article._id.toString())
+    const randomArticle = (await this.ListRandomArticles(1, currentArticleIds))[0]
+
+    // Add random article to position between 0 and 5
+    recommendedArticles.splice(Math.round(Math.random() * 5), 0, randomArticle)
+
     return recommendedArticles
+  }
+
+  public async ListRandomArticles(amount: number, excludeIds: string[] = []): Promise<ArticleListItem[]> {
+    const objectIdsNotToFind = ObjectIdArray(excludeIds)
+
+    return this.articleListItemRepository
+      .aggregateEntity([
+        {
+          $match: {
+            _id: {
+              $nin: objectIdsNotToFind,
+            },
+          },
+        },
+        {
+          $sample: {
+            size: amount,
+          },
+        },
+      ])
+      .toArray()
   }
 
   public async getArticleDetails(articleId: string): Promise<ArticleDetails> {
